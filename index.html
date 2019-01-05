@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div id="calendar-ui">
+        <div class="header">
+            <div id="date"></div>
+            <div id="date-change">
+                <i id="prev" class="fas fa-chevron-up"></i><i id="next" class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+        <ul id="weekday">
+            <li class="off">S</li>
+            <li>M</li>
+            <li>T</li>
+            <li>W</li>
+            <li>T</li>
+            <li>F</li>
+            <li class="off">S</li>
+        </ul>
+        <div id="calendars">
+            <ul  id="calendar"></ul>
+            <ul  id="transition"></ul>
+            <div id="appointments">
+                <div id="day"></div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <script src="js/app.js" async defer></script>
+</body>
+
+</html>
