@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
         crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
@@ -24,7 +24,9 @@
                 <div id="navigation">
                     <div id="date"></div>
                     <div id="date-change">
-                        <i id="prev" class="fas fa-chevron-up"></i><i id="next" class="fas fa-chevron-down"></i>
+                        <i id="prev" class="fas fa-chevron-up"></i>
+                        <i id="next" class="fas fa-chevron-down"></i>
+                        <i id="add" class="fas fa-plus"></i>
                     </div>
                 </div>
                 <div id="back"><i class="fas fa-chevron-left"></i> <span id="back-label"></span></div>
@@ -39,12 +41,149 @@
                 <li class="off">S</li>
             </ul>
             <div id="calendars">
-                <ul  id="calendar"></ul>
-                <ul  id="transition"></ul>
+                <ul id="calendar"></ul>
+                <ul id="transition"></ul>
             </div>
-            
+
         </div>
         <div id="appointments"></div>
+        <div id="schedules">
+            <p id="schedules-header">New appointment</p>
+            <label>
+                <div class="title-label">Title</div>
+                <input id="title" type="text">
+                <div class="focus"></div>
+            </label>
+            
+            <label>
+                <div class="title-label">Description</div>
+                <textarea id="description"></textarea>
+                <div class="focus"></div>
+            </label>
+            
+            <div id="date-time" class="hide">
+                <!--<label>
+                        <select id="months">
+                            <option value="0">Jan</option>
+                            <option value="1">Fev</option>
+                            <option value="2">Mar</option>
+                            <option value="3">Apr</option>
+                            <option value="4">May</option>
+                            <option value="5">Jun</option>
+                            <option value="6">Jul</option>
+                            <option value="7">Agu</option>
+                            <option value="8">Sep</option>
+                            <option value="9">Oct</option>
+                            <option value="10">Nov</option>
+                            <option value="11">Dec</option>
+                        </select>
+                        <div class="focus"></div>
+                </label>
+                <label>
+                        <select id="days">
+                            <option value="0">01</option>
+                            <option value="1">Fev</option>
+                            <option value="2">Mar</option>
+                            <option value="3">Apr</option>
+                            <option value="4">May</option>
+                            <option value="5">Jun</option>
+                            <option value="6">Jul</option>
+                            <option value="7">Agu</option>
+                            <option value="8">Sep</option>
+                            <option value="9">Oct</option>
+                            <option value="10">Nov</option>
+                            <option value="11">Dec</option>
+                        </select>
+                        <div class="focus"></div>
+                </label>
+                <label>
+                        <select id="years">
+                            <option value="0">2019</option>
+                        </select>
+                </label>
+                <label>
+                        <select id="time">
+                            <option value="00">00:00</option>
+                            <option value="01">01:00</option>
+                            <option value="02">02:00</option>
+                            <option value="03">03:00</option>
+                            <option value="04">04:00</option>
+                            <option value="05">05:00</option>
+                            <option value="06">06:00</option>
+                            <option value="07">07:00</option>
+                            <option value="08">08:00</option>
+                            <option value="09">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                            <option value="23">23:00</option>
+                        </select>
+                        <div class="focus"></div>
+                -->
+                <label>
+                        <div class="title-label">Start at</div>
+                        <select id="time">
+                            <option value="00">00:00</option>
+                            <option value="01">01:00</option>
+                            <option value="02">02:00</option>
+                            <option value="03">03:00</option>
+                            <option value="04">04:00</option>
+                            <option value="05">05:00</option>
+                            <option value="06">06:00</option>
+                            <option value="07">07:00</option>
+                            <option value="08">08:00</option>
+                            <option value="09">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                            <option value="23">23:00</option>
+                        </select>
+                        <div class="focus"></div>
+                </label>
+                <label>
+                    <ul>
+                        <li id="mini-prev"><i class="fas fa-chevron-left"></i></li>
+                        <li id="mini-date"></li>
+                        <li id="mini-next"><i class="fas fa-chevron-right"></i></li>
+                    </ul>
+                    <ul id="mini-week">
+                        <li class="off">S</li>
+                        <li>M</li>
+                        <li>T</li>
+                        <li>W</li>
+                        <li>T</li>
+                        <li>F</li>
+                        <li class="off">S</li>
+                    </ul>
+                    <ul id="mini-calendar"></ul>
+                </label>
+            </div>
+            <ul id="actions">
+                <li id="cancel"><span><i class="fas fa-times"></i></span><small>Cancel</small></li>
+                <li id="save"><span><i class="fas fa-save"></i></span><small>Save</small></li>
+                <li id="delete" class="hide"><span><i class="fas fa-trash-alt"></i></span><small>Delete</small></li>
+            </ul>
+        </div>
     </div>
 
     <script src="js/app.js" async defer></script>
