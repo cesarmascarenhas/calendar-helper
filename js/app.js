@@ -145,9 +145,10 @@ let App = function () {
     const ui_date_time          = document.getElementById('date-time')
     const hide_mini_date        = document.getElementById('mini-selected-date')
 
-    let schedule_open   = false;
-    let calendar        = new Calendar()
-    let mini_calendar   = new Calendar()
+    let schedule_open       = false;
+    let add_schedule_open   = false;
+    let calendar            = new Calendar()
+    let mini_calendar       = new Calendar()
 
     this.resetAnimation = () => {
         setTimeout(() => {
@@ -198,10 +199,10 @@ let App = function () {
 
     this.mountCalendar = (active = ui_calendar) => {
 
-        let sheet = !schedule_open ? calendar.render() : mini_calendar.render()
-        let label = !schedule_open ? ui_date : ui_mini_date
+        let sheet = !add_schedule_open ? calendar.render() : mini_calendar.render()
+        let label = !add_schedule_open ? ui_date : ui_mini_date
         
-        label.innerHTML = `${!schedule_open ? sheet.monthLabel : sheet.monthLabel.substring(0,3)} - ${sheet.year}`
+        label.innerHTML = `${!add_schedule_open ? sheet.monthLabel : sheet.monthLabel.substring(0,3)} - ${sheet.year}`
         
 
         active.innerHTML  = sheet.rendered.map((day, index) => {
@@ -224,7 +225,7 @@ let App = function () {
 
         }).join('')
         
-        if(!schedule_open){
+        if(!add_schedule_open){
             this.selectables()
         } else {
             this.miniSelectables()
@@ -336,9 +337,9 @@ let App = function () {
 
         switch(action){
             case 'cancel':                
-                ui_schedules.style = ''
-                hide_mini_date.value = ''
-                schedule_open = false;              
+                ui_schedules.style      = ''
+                hide_mini_date.value    = ''
+                add_schedule_open       = false;              
                 break;
             case 'save':
                break;
@@ -353,7 +354,7 @@ let App = function () {
 
     this.addEvent = () => {
 
-        schedule_open = true;
+        add_schedule_open = true;
 
         ui_schedules.scrollTo(0,0)
         ui_schedules_header.innerHTML = 'Create New Appointment'
