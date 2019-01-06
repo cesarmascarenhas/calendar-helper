@@ -18,32 +18,33 @@
 </head>
 
 <body>
-
-    <div id="calendar-ui">
-        <div class="header">
-            <div id="date"></div>
-            <div id="date-change">
-                <i id="prev" class="fas fa-chevron-up"></i><i id="next" class="fas fa-chevron-down"></i>
+    <div id="calendar-container">
+        <div id="calendar-ui">
+            <div class="header">
+                <div id="navigation">
+                    <div id="date"></div>
+                    <div id="date-change">
+                        <i id="prev" class="fas fa-chevron-up"></i><i id="next" class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div id="back"><i class="fas fa-chevron-left"></i> <span id="back-label"></span></div>
             </div>
-        </div>
-        <ul id="weekday">
-            <li class="off">S</li>
-            <li>M</li>
-            <li>T</li>
-            <li>W</li>
-            <li>T</li>
-            <li>F</li>
-            <li class="off">S</li>
-        </ul>
-        <div id="calendars">
-            <ul  id="calendar"></ul>
-            <ul  id="transition"></ul>
-            <div id="appointments">
-                <div id="day"></div>
+            <ul id="weekday">
+                <li class="off">S</li>
+                <li>M</li>
+                <li>T</li>
+                <li>W</li>
+                <li>T</li>
+                <li>F</li>
+                <li class="off">S</li>
+            </ul>
+            <div id="calendars">
+                <ul  id="calendar"></ul>
+                <ul  id="transition"></ul>
             </div>
+            
         </div>
-        
-        
+        <div id="appointments"></div>
     </div>
 
     <script src="js/app.js" async defer></script>

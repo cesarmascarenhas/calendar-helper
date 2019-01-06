@@ -1,8 +1,8 @@
 let Calendar = function () {
 
-    const weekdays  = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-    const months    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const now       = new Date()
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const now = new Date()
 
     this.currentMonth = now.getMonth()
     this.currentYear = now.getFullYear()
@@ -40,7 +40,7 @@ let Calendar = function () {
     }
 
     this.getDayInWeek = (day) => {
-        return weekdays[new Date(this.currentYear,this.currentMonth,day).getDay()]
+        return weekdays[new Date(this.currentYear, this.currentMonth, day).getDay()]
     }
 
     this.getDaysInMonth = (month = this.currentMonth) => 32 - new Date(this.currentYear, month, 32).getDate()
@@ -87,47 +87,57 @@ let Calendar = function () {
     }
 
 }
-
+// APP ===========================================================================================================
 let App = function () {
 
-    let events = {
-        "3-0-2019":{
-            day:3,
-            month:0,
-            year:2019,
-            title:"Send Code",
-            description:"Send code for hackrank review",
-            startAt:'3:00 PM',
-            endAt:'4:00 PM'
+    const events = [
+        {
+            uid:'3-0-2019',
+            day: 3,
+            month: 0,
+            year: 2019,
+            title: "Send Code",
+            description: "Send code for hackrank review Send code for hackrank review Send code for hackrank review",
+            startAt: '15'
         },
-        "14-1-2019":{
-            day:14,
-            month:1,
-            year:2019,
-            title:"Send Code",
-            description:"Send code for hackrank review",
-            startAt:'3:00 PM',
-            endAt:'4:00 PM'
+        {
+            uid:'3-0-2019',
+            day: 3,
+            month: 0,
+            year: 2019,
+            title: "Send Code",
+            description: "Send code for hackrank review Send code for hackrank review Send code for hackrank review Send code for hackrank review Send code for hackrank review Send code for hackrank review",
+            startAt: '16'
+        },
+        {
+            uid:'14-1-2019',
+            day: 14,
+            month: 1,
+            year: 2019,
+            title: "Send Code",
+            description: "Send code for hackrank review",
+            startAt: '14'
         }
-    }
+    ]
 
-    const ui_calendar       = document.getElementById('calendar')
-    const ui_transition     = document.getElementById('transition')
-    const ui_date           = document.getElementById('date')
-    const ui_next           = document.getElementById('next')
-    const ui_prev           = document.getElementById('prev')
-    const ui_appointments   = document.getElementById('appointments') 
-    const ui_day            = document.getElementById('day') 
+    const ui_calendar = document.getElementById('calendar')
+    const ui_transition = document.getElementById('transition')
+    const ui_date = document.getElementById('date')
+    const ui_next = document.getElementById('next')
+    const ui_prev = document.getElementById('prev')
+    const ui_appointments = document.getElementById('appointments')
+    const ui_navigation = document.getElementById('navigation')
+    const ui_back = document.getElementById('back')
+    const ui_back_label = document.getElementById('back-label')
 
-    let active = 0;
-
-    let calendar = new Calendar()
+    let schedule_open   = false;
+    let calendar        = new Calendar()
 
     this.resetAnimation = () => {
         setTimeout(() => {
             ui_transition.className = ''
-            ui_calendar.className   = ''
-            ui_calendar.innerHTML   = ui_transition.innerHTML
+            ui_calendar.className = ''
+            ui_calendar.innerHTML = ui_transition.innerHTML
             this.mountCalendar();
         }, 500)
     }
@@ -138,7 +148,7 @@ let App = function () {
         this.mountCalendar(ui_transition);
 
         ui_transition.className = 'uptransition'
-        ui_calendar.className   = 'upcalendar'
+        ui_calendar.className = 'upcalendar'
 
         this.resetAnimation();
 
@@ -151,7 +161,7 @@ let App = function () {
         this.mountCalendar(ui_transition);
 
         ui_transition.className = 'downtransition'
-        ui_calendar.className   = 'downcalendar'
+        ui_calendar.className = 'downcalendar'
 
         this.resetAnimation();
 
@@ -161,26 +171,26 @@ let App = function () {
 
         let sheet = calendar.render()
 
-        ui_date.innerHTML   = `${sheet.monthLabel} - ${sheet.year}`
+        ui_date.innerHTML = `${sheet.monthLabel} - ${sheet.year}`
 
-        active.innerHTML    = sheet.rendered.map((day, index) => {
+        active.innerHTML = sheet.rendered.map((day, index) => {
 
-            const {month,year} = sheet
+            const { month, year } = sheet
             const range = (index >= sheet.prevDays && index <= sheet.currentDays)
-            const uid = [day,month,year].join('-');
-            
-            return `<li id=${index} data-date="${uid}" class="${ range ? 'selectable' : 'off' }">
+            const uid = [day, month, year].join('-');
+
+            return `<li id=${index} data-date="${uid}" class="${range ? 'selectable' : 'off'}">
                         <div class="day">
                             <span class="${
-                                day === sheet.today && sheet.prevDays < index && index <= sheet.currentDays
-                                ? 
-                                    'today'
-                                :
-                                    ''}">${day}</span>                            
+                day === sheet.today && sheet.prevDays < index && index <= sheet.currentDays
+                    ?
+                    'today'
+                    :
+                    ''}">${day}</span>                            
                         </div>
-                        <span class="${ events[uid] !== undefined && range ? 'event' : '' }"></span>
+                        <span class="${ this.checkEvents(uid).length > 0 && range ? 'event' : ''}"></span>
                     </li>`
-            
+
         }).join('')
 
         this.selectables()
@@ -188,38 +198,86 @@ let App = function () {
 
     this.selectables = () => {
         let selectables = document.querySelectorAll('.selectable')
-        Array.from(selectables).map( selectable => selectable.addEventListener('click',(e)=>{this.appointments(e.currentTarget)}))
+        Array.from(selectables).map(selectable => selectable.addEventListener('click', (e) => { this.appointments(e.currentTarget) }))
     }
 
-    this.appointments = (target) =>{
+    this.checkEvents = (date) => {
+        return events.filter( event => event.uid === date)
+    }
 
+    this.getEventInTime = (time,today) => {
+        return events.filter( event => event.uid === today && event.startAt === time ? event : false)
+    }
+    this.back = () => {
+        ui_navigation.style = ''
+        ui_back.style = ''
+        ui_calendar.className = 'selected'
+        ui_calendar.style.transform = `translateY(0px)`
+        ui_appointments.style = ''
+        ui_appointments.style = ''
+        schedule_open = false
+
+        let selectables = document.querySelectorAll('.selectable')
+        Array.from(selectables).filter(
+            selectable => {
+                selectable.className = 'selectable'
+            }
+        )
+    }
+    this.appointments = (target) => {
+
+        let selectables = document.querySelectorAll('.selectable')
         let id          = target.id
-        let element     = document.getElementById(id);
+        let element     = document.getElementById(id)
+        let today       = element.dataset.date 
+        let row         = ~~(id / 7)
         let rect        = {
             top: element.offsetTop,
             left: element.offsetLeft,
             width: element.offsetWidth,
             height: element.offsetHeight
-        }      
+        }
+        let date = today.split('-')
 
-        ui_appointments.style     = `width:${rect.width}px; height:${rect.height}px; top:${rect.top}px; left:${rect.left}px;`
+        Array.from(selectables).filter(
+            selectable => {
+            selectable.id == id ?
+                selectable.className += ' selected'
+                :
+                selectable.className = 'selectable'
+            }
+        )
+
+        ui_back_label.innerHTML = `${calendar.getDayInWeek(date[0])} - ${calendar.getMonthLabel(date[1])} ${date[0]}, ${date[2]}`
         
-        /*
-        let id      = target.id
-        let date    = target.dataset.date.split('-')
-        let element = document.getElementById(id)
-        let rect    = element.getBoundingClientRect()
+        if(!schedule_open){
+            ui_navigation.style.transform = 'translateY(-100%)'
+            ui_back.style.transform = 'translateY(-100%)'
+            ui_calendar.className = 'selected'
+            ui_calendar.style.transform = `translateY(-${rect.height * row}px)`
+            ui_appointments.style.height    = `calc(100% - ${rect.height + 160}px)` // counting paddings
+            ui_appointments.style.transform = `translateY(-${ui_appointments.getBoundingClientRect().height - (rect.height + 120)}px)` // counting paddings
+            schedule_open = true
+        } else {
+            ui_appointments.scrollTo(0,0);
+        }
 
-        ui_appointments.style     = `width:${rect.width}px; height:${rect.height}px; top:${rect.y}px; left:${rect.x}px;`
-        */
-        ui_day.innerHTML          = element.innerHTML
-        ui_appointments.className = 'open'
+        let day_schedule = ''
+        for(let i = 0 ; i <= 24 ; i++){
 
-        console.log(calendar.getDayInWeek(date[0]))
+            let time  = i < 10 ? '0'+i : i
+            let event =  this.getEventInTime(time.toString(),today)
+            
+            day_schedule +=
+                `<div class="schedule">
+                    <span class="time">${time === 24 ? '00' : time}:00</span>
+                    ${time < 24 ? event.length > 0 ? `<span class="content">${event[0].title}<br>${event[0].description}</span>` : '<span class="empty"></span>' : ''}
+                </div>`
+            
+        }
 
-        setTimeout(()=>{
-            ui_appointments.className = 'opened'
-        },400)
+        ui_appointments.innerHTML = day_schedule
+    
     }
 
     this.init = () => {
@@ -227,7 +285,8 @@ let App = function () {
         this.mountCalendar()
         ui_next.addEventListener('click', this.mountNext);
         ui_prev.addEventListener('click', this.mountPrev);
-        
+        ui_back.addEventListener('click', this.back);
+
     }
 
 }
