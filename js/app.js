@@ -4,11 +4,11 @@ let Calendar = function () {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const now = new Date()
 
-    this.currentMonth = now.getMonth()
-    this.currentYear = now.getFullYear()
-    this.todayMonth = now.getMonth()
-    this.todayDay = now.getDate()
-    this.todayYear = now.getFullYear()
+    this.currentMonth   = now.getMonth()
+    this.currentYear    = now.getFullYear()
+    this.todayMonth     = now.getMonth()
+    this.todayDay       = now.getDate()
+    this.todayYear      = now.getFullYear()
 
 
     this.nextMonth = () => {
@@ -143,6 +143,7 @@ let App = function () {
     const ui_description        = document.getElementById('description')
     const ui_schedules_header   = document.getElementById('schedules-header')
     const ui_date_time          = document.getElementById('date-time')
+    const hide_mini_date        = document.getElementById('mini-selected-date')
 
     let schedule_open   = false;
     let calendar        = new Calendar()
@@ -222,8 +223,31 @@ let App = function () {
                     </li>`
 
         }).join('')
+        
+        if(!schedule_open){
+            this.selectables()
+        } else {
+            this.miniSelectables()
+        }
+    }
 
-        this.selectables()
+    this.setScheduleDate = (target) => {
+        let selectables = document.querySelectorAll('#mini-calendar .selectable')
+        let id          = target.id
+        Array.from(selectables).filter(
+            selectable => {
+            selectable.id == id ?
+                selectable.className += ' selected'
+                :
+                selectable.className = 'selectable'
+            }
+        )
+        hide_mini_date.value = target.dataset.date
+    }
+
+    this.miniSelectables = () => {
+        let selectables = document.querySelectorAll('#mini-calendar .selectable')
+        Array.from(selectables).map(selectable => selectable.addEventListener('click', (e) => { this.setScheduleDate(e.currentTarget) }))
     }
 
     this.selectables = () => {
@@ -312,7 +336,9 @@ let App = function () {
 
         switch(action){
             case 'cancel':                
-                ui_schedules.style = ''              
+                ui_schedules.style = ''
+                hide_mini_date.value = ''
+                schedule_open = false;              
                 break;
             case 'save':
                break;
