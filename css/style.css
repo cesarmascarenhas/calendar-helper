@@ -52,10 +52,6 @@ li {
     transform: translate(-50%, -50%);
 }
 
-#add {
-    margin-left: 1em;
-}
-
 #day {
     text-align: left;
 }
@@ -96,8 +92,11 @@ li {
     background-color: #535353
 }
 
-#date {
+#date,#small-date {
     float: left;
+}
+#small-date{
+    display: none;
 }
 
 #date-change {
@@ -105,8 +104,11 @@ li {
     font-size: 1.5em;
 }
 
-#date-change i:first-of-type {
-    margin-right: 1em;
+#date-change i {
+    margin-right: 15px;
+}
+#date-change i:last-of-type{
+    margin-right: 0;
 }
 
 .header {
@@ -147,12 +149,6 @@ li {
 #date-time li {
     height: 15px;
     font-size: 14px;
-}
-
-#schedules .today {
-    display: initial;
-    background-color: transparent;
-    color: #3f51b5;
 }
 
 #schedules .event {
@@ -345,6 +341,41 @@ label ul {
     padding: 10px;
 
 }
+/* APP ALERT */
+#system-alert{
+    position: absolute;
+    top:0;
+    left: 50%;
+    width: calc(90% - 20px);
+    min-height: 60px;
+    background-color: #222;
+    color: #ccc;
+    font-weight: 400;
+    padding: 10px;
+    border-radius: 8px;
+    transform: translate(-50%,-100%);
+    transition: all 350ms ease-in-out;
+}
+#system-alert div{
+    position: absolute;
+    text-align: center;
+}
+#system-alert-msg{
+    width: calc(90% - 25px);
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+#system-alert-close{
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 10px;
+    background-color: #535353;
+    top:10px;
+    right:10px;
+    font-size: 10px;
+}
 
 
 /* ANIMATIONS */
@@ -402,5 +433,15 @@ label ul {
 
     100% {
         transform: translateY(-100%);
+    }
+}
+
+/*MEDIA SIZE*/
+@media(max-width:320px){
+    #date{
+        display: none;
+    }
+    #small-date{
+        display: initial;
     }
 }

@@ -23,7 +23,9 @@
             <div class="header">
                 <div id="navigation">
                     <div id="date"></div>
+                    <div id="small-date"></div>
                     <div id="date-change">
+                        <i id="today" class="fas fa-map-pin"></i>
                         <i id="prev" class="fas fa-chevron-up"></i>
                         <i id="next" class="fas fa-chevron-down"></i>
                         <i id="add" class="fas fa-plus"></i>
@@ -60,7 +62,8 @@
                 <textarea id="description"></textarea>
                 <div class="focus"></div>
             </label>
-            
+            <input type="hidden" id="selected-date" value="">
+            <input type="hidden" id="selected-time" value="">
             <div id="date-time" class="hide">
                 <label>
                     <ul>
@@ -117,7 +120,12 @@
                 <li id="delete" class="hide"><span><i class="fas fa-trash-alt"></i></span><small>Delete</small></li>
             </ul>
         </div>
+        <div id="system-alert">
+            <div id="system-alert-msg"></div>
+            <div id="system-alert-close"><i class="fas fa-times"></i></div>
+        </di>
     </div>
+    
 
     <script src="js/app.js" async defer></script>
 </body>

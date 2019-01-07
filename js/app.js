@@ -1,15 +1,15 @@
 let Calendar = function () {
 
-    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const now = new Date()
+    const WEEKDAYS  = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const MONTHS    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const NOW       = new Date()
 
-    this.currentMonth   = now.getMonth()
-    this.currentYear    = now.getFullYear()
-    this.todayMonth     = now.getMonth()
-    this.todayDay       = now.getDate()
-    this.todayYear      = now.getFullYear()
-
+    this.todayMonth     = NOW.getMonth()
+    this.todayDay       = NOW.getDate()
+    this.todayYear      = NOW.getFullYear()
+    this.currentDay     = 0
+    this.currentMonth   = NOW.getMonth()
+    this.currentYear    = NOW.getFullYear()
 
     this.nextMonth = () => {
         this.currentMonth + 1 > 11 ?
@@ -37,11 +37,16 @@ let Calendar = function () {
         this.currentYear -= 1
     }
 
-    this.getDayInWeek = (day) => {
-        return weekdays[new Date(this.currentYear, this.currentMonth, day).getDay()]
+    this.today = () => {
+        this.currentMonth = this.todayMonth
+        this.currentYear  = this.todayYear
     }
 
-    this.getMonthLabel = (month = 0) => months[month]
+    this.getDayInWeek = (day) => {
+        return WEEKDAYS[new Date(this.currentYear, this.currentMonth, day).getDay()]
+    }
+
+    this.getMonthLabel = (month = 0) => MONTHS[month]
 
     this.getDaysInMonth = (month = this.currentMonth) => 32 - new Date(this.currentYear, month, 32).getDate()
 
@@ -80,7 +85,8 @@ let Calendar = function () {
             today: this.checkToday(),
             monthLabel: this.getMonthLabel(this.currentMonth),
             month: this.currentMonth,
-            year: this.currentYear
+            year: this.currentYear,
+            day: this.currentDay
         }
 
 
@@ -90,82 +96,71 @@ let Calendar = function () {
 // APP ===========================================================================================================
 let App = function () {
 
-    let events = [
-        {
-            uid:'3-0-2019',
-            day: 3,
-            month: 0,
-            year: 2019,
-            title: "Send Code",
-            description: "Send code for hackrank review Send code for hackrank review Send code for hackrank review",
-            startAt: '15'
-        },
-        {
-            uid:'3-0-2019',
-            day: 3,
-            month: 0,
-            year: 2019,
-            title: "Send Code",
-            description: "Send code for hackrank review Send code for hackrank review Send code for hackrank review Send code for hackrank review Send code for hackrank review Send code for hackrank review",
-            startAt: '16'
-        },
-        {
-            uid:'14-1-2019',
-            day: 14,
-            month: 1,
-            year: 2019,
-            title: "Send Code",
-            description: "Send code for hackrank review",
-            startAt: '14'
-        }
-    ]
+    let storage = myStorage = window.localStorage
+    let events  = storage.getItem('events') 
+    
+    events = events === null ? [] : JSON.parse(events)
 
-    const ui_calendar           = document.getElementById('calendar')
-    const ui_mini_calendar      = document.getElementById('mini-calendar')
-    const ui_transition         = document.getElementById('transition')
-    const ui_date               = document.getElementById('date')
-    const ui_mini_date          = document.getElementById('mini-date')
-    const ui_next               = document.getElementById('next')
-    const ui_prev               = document.getElementById('prev')
-    const ui_mini_next          = document.getElementById('mini-next')
-    const ui_mini_prev          = document.getElementById('mini-prev')
-    const ui_add                = document.getElementById('add')
-    const ui_appointments       = document.getElementById('appointments')
-    const ui_navigation         = document.getElementById('navigation')
-    const ui_back               = document.getElementById('back')
-    const ui_back_label         = document.getElementById('back-label')
-    const ui_schedules          = document.getElementById('schedules')
-    const ui_cancel             = document.getElementById('cancel')
-    const ui_save               = document.getElementById('save')
-    const ui_delete             = document.getElementById('delete')
-    const ui_time               = document.getElementById('time')
-    const ui_title              = document.getElementById('title')
-    const ui_description        = document.getElementById('description')
-    const ui_schedules_header   = document.getElementById('schedules-header')
-    const ui_date_time          = document.getElementById('date-time')
-    const hide_mini_date        = document.getElementById('mini-selected-date')
+    const UI_CALENDAR = document.getElementById('calendar')
+    const UI_MINI_CALENDAR = document.getElementById('mini-calendar')
+    const UI_TRANSITION = document.getElementById('transition')
+    const UI_DATE = document.getElementById('date')
+    const UI_SMALL_DATE = document.getElementById('small-date')
+    const UI_MINI_DATE = document.getElementById('mini-date')
+    const UI_TODAY = document.getElementById('today')
+    const UI_NEXT = document.getElementById('next')
+    const UI_PREV = document.getElementById('prev')
+    const UI_MINI_NEXT = document.getElementById('mini-next')
+    const UI_MINI_PREV = document.getElementById('mini-prev')
+    const UI_ADD = document.getElementById('add')
+    const UI_APPOINTMENTS = document.getElementById('appointments')
+    const UI_NAVIGATION = document.getElementById('navigation')
+    const UI_BACK = document.getElementById('back')
+    const UI_BACK_LABEL = document.getElementById('back-label')
+    const UI_SCHEDULES = document.getElementById('schedules')
+    const UI_CANCEL = document.getElementById('cancel')
+    const UI_SAVE = document.getElementById('save')
+    const UI_DELETE = document.getElementById('delete')
+    const UI_TIME = document.getElementById('time')
+    const UI_TITLE = document.getElementById('title')
+    const UI_DESCRIPTION = document.getElementById('description')
+    const UI_SCHEDULES_HEADER = document.getElementById('schedules-header')
+    const UI_DATE_TIME = document.getElementById('date-time')
+    const UI_SYSTEM_ALERT = document.getElementById('system-alert')
+    const UI_SYSTEM_ALERT_MSG = document.getElementById('system-alert-msg')
+    const UI_SYSTEM_ALERT_CLOSE = document.getElementById('system-alert-close')
 
-    let schedule_open       = false;
-    let add_schedule_open   = false;
-    let calendar            = new Calendar()
-    let mini_calendar       = new Calendar()
+    const ERROR_ENTRY_EXISTS = '<i class="fas fa-exclamation-triangle"></i> Event already exists, please edit or delete the previous entry.'
+    const ERROR_EMPTY_FIELD  = '<i class="fas fa-exclamation-triangle"></i> Please, fill up all the fields to create an entry.'
+    const SUCCESS_SAVED      = '<i class="fas fa-save"></i> Entry added.'
+    const SUCCESS_MODIFIED   = '<i class="fas fa-save"></i> Entry modified.'
+    const SUCCESS_DELETED    = '<i class="fas fa-trash-alt"></i> Entry deleted.'
+
+    const HIDE_DATE = document.getElementById('selected-date')
+    const HIDE_TIME = document.getElementById('selected-time')
+
+    let schedule_open = false;
+    let add_schedule_open = false;
+    let calendar = new Calendar()
+    let mini_calendar = new Calendar()
+    let schedule_action = ''
 
     this.resetAnimation = () => {
         setTimeout(() => {
-            ui_transition.className = ''
-            ui_calendar.className   = ''
-            ui_calendar.innerHTML   = ui_transition.innerHTML
-            this.mountCalendar(ui_calendar);
+            UI_TRANSITION.className = ''
+            UI_CALENDAR.className = ''
+            UI_CALENDAR.innerHTML = UI_TRANSITION.innerHTML
+            this.mountCalendar(UI_CALENDAR);
         }, 500)
     }
 
     this.mountNext = () => {
 
         calendar.nextMonth()
-        this.mountCalendar(ui_transition);
+        this.mountCalendar(UI_TRANSITION);
 
-        ui_transition.className = 'uptransition'
-        ui_calendar.className   = 'upcalendar'
+        UI_TRANSITION.className = 'uptransition'
+        UI_CALENDAR.className = 'upcalendar'
 
         this.resetAnimation();
 
@@ -174,10 +169,10 @@ let App = function () {
     this.mountPrev = () => {
 
         calendar.prevMonth()
-        this.mountCalendar(ui_transition);
+        this.mountCalendar(UI_TRANSITION);
 
-        ui_transition.className = 'downtransition'
-        ui_calendar.className   = 'downcalendar'
+        UI_TRANSITION.className = 'downtransition'
+        UI_CALENDAR.className = 'downcalendar'
 
         this.resetAnimation();
 
@@ -186,46 +181,46 @@ let App = function () {
     this.mountMiniNext = () => {
 
         mini_calendar.nextMonth()
-        this.mountCalendar(ui_mini_calendar);
+        this.mountCalendar(UI_MINI_CALENDAR);
 
     }
 
     this.mountMiniPrev = () => {
 
         mini_calendar.prevMonth()
-        this.mountCalendar(ui_mini_calendar);
+        this.mountCalendar(UI_MINI_CALENDAR);
 
     }
 
-    this.mountCalendar = (active = ui_calendar) => {
+    this.mountCalendar = (active = UI_CALENDAR) => {
 
         let sheet = !add_schedule_open ? calendar.render() : mini_calendar.render()
-        let label = !add_schedule_open ? ui_date : ui_mini_date
-        
-        label.innerHTML = `${!add_schedule_open ? sheet.monthLabel : sheet.monthLabel.substring(0,3)} - ${sheet.year}`
-        
+        let label = !add_schedule_open ? UI_DATE : UI_MINI_DATE
 
-        active.innerHTML  = sheet.rendered.map((day, index) => {
+        label.innerHTML = `${!add_schedule_open ? sheet.monthLabel : sheet.monthLabel.substring(0, 3)} - ${sheet.year}`
 
+        UI_SMALL_DATE.innerHTML = `${sheet.monthLabel.substring(0, 3)} - ${sheet.year}`
+
+        active.innerHTML = sheet.rendered.map((day, index) => {
+           
             const { month, year } = sheet
             const range = (index >= sheet.prevDays && index <= sheet.currentDays)
             const uid = [day, month, year].join('-');
 
-            return `<li id=${index} data-date="${uid}" class="${range ? 'selectable' : 'off'}">
+            return `<li id=${index} data-date="${uid}" class="${range ? 'selectable' : 'off'} ${day === sheet.day? 'selected' : ''}">
                         <div class="day">
                             <span class="${
-                day === sheet.today && sheet.prevDays < index && index <= sheet.currentDays
-                    ?
-                    'today'
-                    :
-                    ''}">${day}</span>                            
+                                    day === sheet.today && sheet.prevDays < index && index <= sheet.currentDays ?
+                                    'today' :
+                                    ''}"
+                            >${day}</span>                            
                         </div>
                         <span class="${ this.checkEvents(uid).length > 0 && range ? 'event' : ''}"></span>
                     </li>`
 
         }).join('')
-        
-        if(!add_schedule_open){
+
+        if (!add_schedule_open) {
             this.selectables()
         } else {
             this.miniSelectables()
@@ -233,41 +228,54 @@ let App = function () {
     }
 
     this.setScheduleDate = (target) => {
+
         let selectables = document.querySelectorAll('#mini-calendar .selectable')
-        let id          = target.id
+        let id = target.id
         Array.from(selectables).filter(
             selectable => {
-            selectable.id == id ?
-                selectable.className += ' selected'
-                :
-                selectable.className = 'selectable'
+                selectable.id == id ?
+                    selectable.className += ' selected'
+                    :
+                    selectable.className = 'selectable'
             }
         )
-        hide_mini_date.value = target.dataset.date
+        HIDE_DATE.value = target.dataset.date
+
     }
 
     this.miniSelectables = () => {
         let selectables = document.querySelectorAll('#mini-calendar .selectable')
-        Array.from(selectables).map(selectable => selectable.addEventListener('click', (e) => { this.setScheduleDate(e.currentTarget) }))
+        Array.from(selectables).map( 
+            selectable => selectable.addEventListener('click', (e) => {
+                this.setScheduleDate(e.currentTarget)
+            })
+        )
     }
 
     this.selectables = () => {
         let selectables = document.querySelectorAll('.selectable')
-        Array.from(selectables).map(selectable => selectable.addEventListener('click', (e) => { this.appointments(e.currentTarget) }))
+        Array.from(selectables).map(
+            selectable => selectable.addEventListener('click', (e) => { 
+                calendar.currentDay = parseInt(e.currentTarget.dataset.date.split('-')[0])
+                this.appointments(e.currentTarget)
+            })
+        )
     }
 
-    this.checkEvents = (date) => events.filter( event => event.uid === date)
+    this.checkEvents = (date) => events.filter(event => event.uid === date)
 
-    this.getEventInTime = (time,today) => events.filter( (event,index) => event.uid === today && event.startAt === time )
+    this.getEventInTime = (time, today) => events.filter((event, index) => event.uid === today && event.startAt === time)
 
     this.back = () => {
-        ui_navigation.style         = ''
-        ui_back.style               = ''
-        ui_calendar.className       = 'selected'
-        ui_calendar.style.transform = `translateY(0px)`
-        ui_appointments.style       = ''
-        ui_appointments.style       = ''
-        schedule_open               = false
+
+        UI_NAVIGATION.style = ''
+        UI_BACK.style = ''
+        UI_CALENDAR.className = 'selected'
+        UI_CALENDAR.style.transform = `translateY(0px)`
+        UI_APPOINTMENTS.style = ''
+        UI_APPOINTMENTS.style = ''
+        schedule_open = false
+        calendar.currentDay = 0;
 
         let selectables = document.querySelectorAll('.selectable')
         Array.from(selectables).filter(
@@ -276,14 +284,42 @@ let App = function () {
             }
         )
     }
+
+    this.mountSchedules = (date) => {
+
+        let day_schedule = ''
+
+        for (let i = 0; i <= 24; i++) {
+
+            let time = i < 10 ? '0' + i : i
+            let event = this.getEventInTime(time.toString(), date) 
+
+            day_schedule +=
+                `<div data-entry="${event.length > 0 ? 'entry' : '' }" class="schedule" data-time="${time}" data-date="${date}">
+                    <span class="time">${time === 24 ? '00' : time}:00</span>
+                    ${time < 24 ? event.length > 0 ? `<span class="content">${event[0].title}<br>${event[0].description}</span>` : '<span class="empty"></span>' : ''}
+                </div>`
+
+        }
+
+        UI_APPOINTMENTS.innerHTML = day_schedule
+        
+        //SCROLL APPOINTMENTS TO THE FIRST ENTRY AVAILABLE
+        let scroll = UI_APPOINTMENTS.querySelector('.schedule[data-entry=entry]')
+        UI_APPOINTMENTS.scrollTo( 0, scroll !== null ? scroll.offsetTop - 10 : 0 )
+        
+        this.schedules()
+
+    }
+
     this.appointments = (target) => {
 
         let selectables = document.querySelectorAll('.selectable')
-        let id          = target.id
-        let element     = document.getElementById(id)
-        let today       = element.dataset.date 
-        let row         = ~~(id / 7)
-        let rect        = {
+        let id = target.id
+        let element = document.getElementById(id)
+        let today = element.dataset.date
+        let row = ~~(id / 7)
+        let rect = {
             top: element.offsetTop,
             left: element.offsetLeft,
             width: element.offsetWidth,
@@ -293,56 +329,83 @@ let App = function () {
 
         Array.from(selectables).filter(
             selectable => {
-            selectable.id == id ?
-                selectable.className += ' selected'
-                :
-                selectable.className = 'selectable'
+                selectable.id == id ?
+                    selectable.className += ' selected'
+                    :
+                    selectable.className = 'selectable'
             }
         )
 
-        ui_back_label.innerHTML = `${calendar.getDayInWeek(date[0])} - ${calendar.getMonthLabel(date[1])} ${date[0]}, ${date[2]}`
-        
-        if(!schedule_open){
-            ui_navigation.style.transform   = 'translateY(-100%)'
-            ui_back.style.transform         = 'translateY(-100%)'
-            ui_calendar.className           = 'selected'
-            ui_calendar.style.transform     = `translateY(-${rect.height * row}px)`
-            ui_appointments.style.height    = `calc(100% - ${rect.height + 160}px)` // counting paddings
-            ui_appointments.style.transform = `translateY(-${ui_appointments.getBoundingClientRect().height - (rect.height + 120)}px)` // counting paddings
+        UI_BACK_LABEL.innerHTML = `${calendar.getDayInWeek(date[0])} - ${calendar.getMonthLabel(date[1])} ${date[0]}, ${date[2]}`
+
+        if (!schedule_open) {
+            UI_NAVIGATION.style.transform = 'translateY(-100%)'
+            UI_BACK.style.transform = 'translateY(-100%)'
+            UI_CALENDAR.className = 'selected'
+            UI_CALENDAR.style.transform = `translateY(-${rect.height * row}px)`
+            UI_APPOINTMENTS.style.height = `calc(100% - ${rect.height + 160}px)` // counting paddings
+            UI_APPOINTMENTS.style.transform = `translateY(-${UI_APPOINTMENTS.getBoundingClientRect().height - (rect.height + 120)}px)` // counting paddings
             schedule_open = true
         } else {
-            ui_appointments.scrollTo(0,0);
+            UI_APPOINTMENTS.scrollTo(0, 0);
         }
 
-        let day_schedule = ''
-        for(let i = 0 ; i <= 24 ; i++){
+        this.mountSchedules(today)
 
-            let time  = i < 10 ? '0'+i : i
-            let event =  this.getEventInTime(time.toString(),today)
-
-            day_schedule +=
-                `<div class="schedule" data-time="${time}" data-date="${today}">
-                    <span class="time">${time === 24 ? '00' : time}:00</span>
-                    ${time < 24 ? event.length > 0 ? `<span class="content">${event[0].title}<br>${event[0].description}</span>` : '<span class="empty"></span>' : ''}
-                </div>`
-            
-        }
-
-        ui_appointments.innerHTML = day_schedule
-        this.schedules()
-    
     }
 
-    this.schedules_actions = (action,props={}) => {
+    this.resetSchedules = () => {
+        schedule_action     = ''
+        UI_SCHEDULES.style  = ''
+        HIDE_DATE.value     = ''
+        HIDE_TIME.value     = ''
+        add_schedule_open   = false
+    }
 
-        switch(action){
-            case 'cancel':                
-                ui_schedules.style      = ''
-                hide_mini_date.value    = ''
-                add_schedule_open       = false;              
-                break;
+    this.schedules_actions = (action, props = {}) => {
+
+        let mount = (uid) => {
+
+            localStorage.setItem('events', JSON.stringify(events))
+            this.resetSchedules()
+            this.mountCalendar()
+            this.mountSchedules(uid)            
+        
+        }
+
+        switch (action) {
+            case 'cancel':
+                this.resetSchedules()
+                break
             case 'save':
-               break;
+
+                //VALIDATE EMPTY FIELDS
+                if(this.addEventValidate()){
+                    this.systemAlert(ERROR_EMPTY_FIELD,4)
+                    return
+                }                   
+
+                if (schedule_action == 'add') {
+                    //VALIDATE EXISTING ENTRIES
+                    if (this.getEventInTime(HIDE_TIME.value, HIDE_DATE.value).length > 0) {
+                        this.systemAlert(ERROR_ENTRY_EXISTS,4)
+                        return
+                    }
+                    this.systemAlert(SUCCESS_SAVED)
+                    events.push(props)
+                    mount(props.uid)
+                } else {
+                    this.systemAlert(SUCCESS_MODIFIED)
+                    events = events.filter(event => event.ui !== props.uid && event.startAt !== props.startAt)
+                    events.push(props)
+                    mount(props.uid)
+                }
+                break
+            case 'delete':
+                this.systemAlert(SUCCESS_DELETED)
+                events = events.filter(event => event.ui !== props.uid && event.startAt !== props.startAt)
+                mount(props.uid)
+                break
         }
 
     }
@@ -352,97 +415,146 @@ let App = function () {
         Array.from(schedules).map(schedule => schedule.addEventListener('click', (e) => { this.addEventInschedule(e.currentTarget) }))
     }
 
+    this.addEventValidate = () => {
+        const  FIELDS = [UI_TITLE,UI_DESCRIPTION,HIDE_DATE,HIDE_TIME]
+        return FIELDS.some( field => field.value === '')
+    }
+
     this.addEvent = () => {
 
+
+        schedule_action   = 'add'
         add_schedule_open = true;
 
-        ui_schedules.scrollTo(0,0)
-        ui_schedules_header.innerHTML = 'Create New Appointment'
-        ui_schedules.style.transform = 'translateY(-100%)'
-        ui_time.value = '00'
-        
-        ui_title.value = ''
-        ui_description.value = ''
-        ui_date_time.className = ''
+        UI_DELETE.className = 'hide'
+        UI_SCHEDULES.scrollTo(0, 0)
+        UI_SCHEDULES_HEADER.innerHTML = 'Create New Appointment'
+        UI_SCHEDULES.style.transform = 'translateY(-100%)'
+        HIDE_TIME.value = UI_TIME.value = '00'
+
+        UI_TITLE.value = ''
+        UI_DESCRIPTION.value = ''
+        UI_DATE_TIME.className = ''
 
         mini_calendar.currentMonth = calendar.currentMonth
-        mini_calendar.currentYear  = calendar.currentYear
-        
-        ui_mini_date.innerHTML = `${mini_calendar.getMonthLabel(mini_calendar.currentMonth)} - ${mini_calendar.currentYear}`
-       
-        this.mountCalendar(ui_mini_calendar)
+        mini_calendar.currentYear = calendar.currentYear
+
+        UI_MINI_DATE.innerHTML = `${mini_calendar.getMonthLabel(mini_calendar.currentMonth)} - ${mini_calendar.currentYear}`
+
+        UI_SAVE.onclick = () => {       
+            let date = HIDE_DATE.value.split('-')
+            this.schedules_actions('save', {
+                uid: HIDE_DATE.value,
+                day: date[0],
+                month: date[1],
+                year: date[2],
+                title: UI_TITLE.value,
+                description: UI_DESCRIPTION.value,
+                startAt: HIDE_TIME.value
+            })
+        }
+
+        this.mountCalendar(UI_MINI_CALENDAR)
 
     }
 
     this.addEventInschedule = (target) => {
-        
-        let time   = target.dataset.time
-        let day    = target.dataset.date
-        let date   = day.split('-')
-        let range  = parseInt(time) + 1
-            range  = range === 24 ? 00 : range
 
-        if(time === '24'){
+        let time = target.dataset.time
+        let day = target.dataset.date
+        let date = day.split('-')
+        let range = parseInt(time) + 1
+        range = range === 24 ? 00 : range
+
+        if (time === '24') {
             return
         }
 
-        ui_schedules.style.transform = 'translateY(-100%)'
-        ui_time.value = time
-        ui_date_time.className = 'hide'
-        
-        if(target.querySelector('.content') !== null){
-            let event = this.getEventInTime(time,day)[0]
-            ui_schedules_header.innerHTML = `Edit Appointment<br>
+        HIDE_DATE.value = day
+        HIDE_TIME.value = time
+
+        UI_SCHEDULES.style.transform = 'translateY(-100%)'
+        UI_DATE_TIME.className = 'hide'
+
+        if (target.querySelector('.content') !== null) {
+
+            schedule_action = 'edit'
+            let event = this.getEventInTime(time, day)[0]
+            UI_SCHEDULES_HEADER.innerHTML = `Edit Appointment<br>
                                             <small>
-                                                ${calendar.getDayInWeek(date[0])} - ${calendar.getMonthLabel(date[1])} ${date[0]}, ${date[2]}<br> from ${time}:00 to ${range < 10 ? '0'+range : range}:00 
+                                                ${calendar.getDayInWeek(date[0])} - ${calendar.getMonthLabel(date[1])} ${date[0]}, ${date[2]}<br> from ${time}:00 to ${range < 10 ? '0' + range : range}:00 
                                             </small>`
-            ui_title.value = event.title
-            ui_description.value = event.description
-            ui_delete.className = ''
-            ui_delete.onclick = () => this.schedules_actions('delete', event.uid)
-            ui_save.onclick = () => this.schedules_actions('save', {
-                uid:day,
-                day:date[0],
-                month:date[1],
-                year:date[2],
-                title:ui_title.value,
-                description:ui_description.value,
-                startAt:ui_time.value
+            UI_TITLE.value = event.title
+            UI_DESCRIPTION.value = event.description
+            UI_DELETE.className = ''
+            UI_DELETE.onclick = () => this.schedules_actions('delete', { uid: event.uid, startAt: HIDE_TIME.value })
+            UI_SAVE.onclick = () => this.schedules_actions('save', {
+                uid: day,
+                day: date[0],
+                month: date[1],
+                year: date[2],
+                title: UI_TITLE.value,
+                description: UI_DESCRIPTION.value,
+                startAt: HIDE_TIME.value
             })
+
         } else {
-            ui_schedules_header.innerHTML = `Create Appointment<br>
+            schedule_action = 'add'
+            UI_SCHEDULES_HEADER.innerHTML = `Create Appointment<br>
                                             <small>
-                                                ${calendar.getDayInWeek(date[0])} - ${calendar.getMonthLabel(date[1])} ${date[0]}, ${date[2]}<br> from ${time}:00 to ${range < 10 ? '0'+range : range}:00 
+                                                ${calendar.getDayInWeek(date[0])} - ${calendar.getMonthLabel(date[1])} ${date[0]}, ${date[2]}<br> from ${time}:00 to ${range < 10 ? '0' + range : range}:00 
                                             </small>`
-            ui_title.value = ''
-            ui_description.value = ''
-            ui_delete.className = 'hide'
-            ui_save.onclick = () => this.schedules_actions('save', {
-                uid:day,
-                day:date[0],
-                month:date[1],
-                year:date[2],
-                title:ui_title.value,
-                description:ui_description.value,
-                startAt:ui_time.value
+            UI_TITLE.value = ''
+            UI_DESCRIPTION.value = ''
+            UI_DELETE.className = 'hide'
+            UI_SAVE.onclick = () => this.schedules_actions('save', {
+                uid: day,
+                day: date[0],
+                month: date[1],
+                year: date[2],
+                title: UI_TITLE.value,
+                description: UI_DESCRIPTION.value,
+                startAt: HIDE_TIME.value
             })
         }
 
-        
+
     }
 
+    this.backToToday = () => {
+        calendar.today()
+        this.mountCalendar()
+    }
+
+    this.systemAlert = (msg = 'Error without message to display.', time = 2) => {
+
+        UI_SYSTEM_ALERT_MSG.innerHTML = msg
+        UI_SYSTEM_ALERT.style.transform = 'translate(-50%,calc(0% + 20px))'
+
+        let clear_timeout = setTimeout(() => {
+            UI_SYSTEM_ALERT.style = ''
+        }, time * 1000)
+
+        UI_SYSTEM_ALERT_CLOSE.onclick = () => {
+            clearTimeout(clear_timeout);
+            UI_SYSTEM_ALERT.style = ''
+        }
+
+    }
 
     this.init = () => {
 
-        this.mountCalendar(ui_calendar)
-        ui_mini_next.addEventListener('click', this.mountMiniNext);
-        ui_mini_prev.addEventListener('click', this.mountMiniPrev);
-        ui_next.addEventListener('click', this.mountNext);
-        ui_prev.addEventListener('click', this.mountPrev);
-        
-        ui_back.addEventListener('click', this.back);
-        ui_cancel.addEventListener('click', () => this.schedules_actions('cancel'));
-        ui_add.addEventListener('click', () => this.addEvent());
+        this.mountCalendar(UI_CALENDAR)
+        UI_MINI_NEXT.addEventListener('click', this.mountMiniNext);
+        UI_MINI_PREV.addEventListener('click', this.mountMiniPrev);
+        UI_NEXT.addEventListener('click', this.mountNext);
+        UI_PREV.addEventListener('click', this.mountPrev);
+        UI_TODAY.addEventListener('click', () => this.backToToday());
+
+        UI_BACK.addEventListener('click', this.back);
+        UI_ADD.addEventListener('click', () => this.addEvent());
+        UI_CANCEL.addEventListener('click', () => this.schedules_actions('cancel'));
+        UI_TIME.onchange = target => { HIDE_TIME.value = target.currentTarget.value }
 
     }
 
