@@ -1,4 +1,9 @@
-export const Calendar = function () {
+/*
+Calendar APP
+01-08-2019
+Author: Cesar A Mascarenhas
+*/
+let Calendar = function () {
 
     const WEEKDAYS  = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     const MONTHS    = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
