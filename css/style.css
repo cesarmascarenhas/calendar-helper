@@ -6,14 +6,14 @@ html {
     height: 100%;
     padding: 0;
     margin: 0;
-    /*font-family: 'Open Sans', sans-serif;*/
     font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, "Open Sans", Arial, sans-serif;
     font-weight: 600;
 }
 
 #calendar-container {
     position: relative;
-    width: 100%;
+    max-width: 480px;
+    margin: auto;
     height: 100%;
     overflow: hidden;
 }
@@ -60,6 +60,10 @@ li {
     text-align: right;
 }
 
+#back-label {
+    float: right;
+}
+
 #weekday li {
     border: none;
     height: 40px;
@@ -91,11 +95,21 @@ li {
 .selectable.selected span:nth-child(1) {
     background-color: #535353
 }
+.selectable,
+.schedule,
+#navigation i,
+#actions li,
+#back,
+#system-alert-close {
+    cursor: pointer;
+}
 
-#date,#small-date {
+#date,
+#small-date {
     float: left;
 }
-#small-date{
+
+#small-date {
     display: none;
 }
 
@@ -107,7 +121,8 @@ li {
 #date-change i {
     margin-right: 15px;
 }
-#date-change i:last-of-type{
+
+#date-change i:last-of-type {
     margin-right: 0;
 }
 
@@ -131,7 +146,6 @@ li {
 
 #calendars {
     position: relative;
-    /*height: 484px;*/
     height: calc(100% - 93px);
     overflow: hidden;
 }
@@ -341,39 +355,43 @@ label ul {
     padding: 10px;
 
 }
+
 /* APP ALERT */
-#system-alert{
+#system-alert {
     position: absolute;
-    top:0;
+    top: 0;
     left: 50%;
-    width: calc(90% - 20px);
+    width: 300px;
     min-height: 60px;
     background-color: #222;
     color: #ccc;
     font-weight: 400;
     padding: 10px;
     border-radius: 8px;
-    transform: translate(-50%,-100%);
+    transform: translate(-50%, -100%);
     transition: all 350ms ease-in-out;
 }
-#system-alert div{
+
+#system-alert div {
     position: absolute;
     text-align: center;
 }
-#system-alert-msg{
+
+#system-alert-msg {
     width: calc(90% - 25px);
-    top:50%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
 }
-#system-alert-close{
+
+#system-alert-close {
     width: 20px;
     height: 20px;
     line-height: 20px;
     border-radius: 10px;
     background-color: #535353;
-    top:10px;
-    right:10px;
+    top: 10px;
+    right: 10px;
     font-size: 10px;
 }
 
@@ -437,11 +455,12 @@ label ul {
 }
 
 /*MEDIA SIZE*/
-@media(max-width:320px){
-    #date{
+@media(max-width:320px) {
+    #date {
         display: none;
     }
-    #small-date{
+
+    #small-date {
         display: initial;
     }
 }
