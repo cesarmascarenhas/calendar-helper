@@ -51,3 +51,7 @@ The main method to mount and display the calendar is `render`, it must be called
 | month | [`Integer`] Current month, from 0 to 11 |
 | year | [`Integer`] Current year |
 | day | [`Integer`] If an day needs to be selected, use calendar.currentDay = [`Integer`]day |
+
+## Example
+`See the example folder, it contains a full agenda featuring the calendar.js.
+You can schedule events with it` :)
