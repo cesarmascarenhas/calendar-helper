@@ -199,7 +199,6 @@ let App = function () {
 
         let sheet = !add_schedule_open ? calendar.render() : mini_calendar.render()
         let label = !add_schedule_open ? UI_DATE : UI_MINI_DATE
-        console.log(sheet)
         label.innerHTML = `${!add_schedule_open ? sheet.monthLabel : sheet.monthLabel.substring(0, 3)} - ${sheet.year}`
 
         UI_SMALL_DATE.innerHTML = `${sheet.monthLabel.substring(0, 3)} - ${sheet.year}`
